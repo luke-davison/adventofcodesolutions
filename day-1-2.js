@@ -8,10 +8,11 @@ function calculateFile (err, result) {
   if (err) throw err
   const lines = result.split('\n')
   let totals = [0]
-  while (totals.indexOf(totals[totals.length - 1]) === totals.length - 1) {
+  const getTotal = () => totals[totals.length - 1]
+  while (totals.indexOf(getTotal()) === totals.length - 1) {
     const line = lines.shift()
     totals.push(totals[totals.length - 1] + Number(line))
     lines.push(line)
   }
-  console.log(totals[totals.length - 1])
+  console.log(getTotal())
 }

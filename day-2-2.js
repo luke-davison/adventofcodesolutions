@@ -19,8 +19,7 @@ function calculateFile (err, result) {
             }
         })
         if (count === 1) {
-            console.log(line.join(''))
-            console.log(line2.join(''))
+            console.log(line.filter((character, i) => character === line2[i]).join(''))
         }
       })
   })

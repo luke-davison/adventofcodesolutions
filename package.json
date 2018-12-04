@@ -1,0 +1,23 @@
+{
+  "name": "adventofcodesolutions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "day-1-1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luke-davison/adventofcodesolutions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luke-davison/adventofcodesolutions/issues"
+  },
+  "homepage": "https://github.com/luke-davison/adventofcodesolutions#readme",
+  "dependencies": {
+    "moment": "^2.22.2"
+  }
+}

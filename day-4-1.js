@@ -10,7 +10,7 @@ function interpretFile (err, result) {
     let lines = result.split('\n')
     let data = lines.map(line => {
         let dateStr = line.slice(1, line.indexOf("]"))
-        let time = moment(dateStr, "YYYY-MM-DD hh:mm")
+        let time = moment(dateStr, "YYYY-MM-DD HH:mm")
         let str = line.slice(line.indexOf("]") + 2)
         let arr = str.split(" ")
         let id
@@ -63,7 +63,38 @@ function findSleepiestGuard(data) {
         }, 0)
     })
 
-    guards.forEach(guard => {
-        console.log(guard.id, guard.timeAsleep)
+    const sleepiestGuard = guards.reduce((current, next) => !current || next.timeAsleep > current.timeAsleep ? next : current, null)
+    console.log("Id", guard.id)
+    findMostConsistentMinute(sleepiestGuard)
+
+}
+
+function findMostConsistentMinute(guard) {
+    let timesAsleep = []
+    let start
+    for (let i = 0; i < guard.lines.length; i++) {
+        const line = guard.lines[i]
+        if (line.text === 'falls asleep\r') {
+            start = line.time
+        }
+        if (line.text === 'wakes up\r') {
+            line.minutes = moment.duration(line.time.diff(start)).asMinutes()
+            for (let i = 0; i < line.minutes; i++) {
+                timesAsleep.push(start.format('mm'))
+                start.add(1, 'minutes')
+            }
+        }
+    }
+
+    let count = 0
+    const answer = timesAsleep.reduce((ans, min, i) => {
+        const rest = timesAsleep.filter((min2, i2) => i2 > i && min === min2)
+        if (rest.length > count) {
+            count = rest.length
+            return min
+        }
+        return ans
+
     })
+    console.log("Minute", answer)
 }

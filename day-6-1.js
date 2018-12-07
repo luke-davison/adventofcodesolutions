@@ -10,7 +10,7 @@ function interpretFile (err, result) {
     const coordinates = result.split('\r\n').map(line => {
         let x = Number(line.slice(0, line.indexOf(',')))
         let y = Number(line.slice(line.indexOf(',') + 2))
-        return {x, y, cells: []}
+        return {x, y, cells: [], distances: []}
     })
 
     const minX = coordinates.reduce((min, next) => min > next.x ? next.x : min, 99999)
@@ -22,8 +22,9 @@ function interpretFile (err, result) {
 
     for (let x = minX; x <= maxX; x++) {
         for (let y = minY; y <= maxY; y++) {
-            let nearest = [];
-            let nearestDistance;
+            let nearest = []
+            let nearestDistance
+            let distances = []
             coordinates.forEach(coord => {
                 let distance = Math.abs(coord.x - x) + Math.abs(coord.y - y)
                 if (!nearest.length || distance < nearestDistance) {
@@ -32,8 +33,10 @@ function interpretFile (err, result) {
                 } else if (distance === nearestDistance) {
                     nearest.push(coord)
                 }
+                distances.push(distance)
             })
-            const cell = {x, y, nearest, nearestDistance}
+            let distanceSum = distances.reduce((sum, distance) => sum + distance, 0)
+            const cell = {x, y, nearest, nearestDistance, distanceSum}
             cells.push(cell)
             if (cell.nearest.length === 1) {
                 cell.nearest[0].cells.push(cell)
@@ -47,5 +50,10 @@ function interpretFile (err, result) {
     const largestArea = coordinates
         .filter(coord => !coord.edge)
         .reduce((largest, next) => !largest || largest.cells.length < next.cells.length ? next : largest)
-    console.log(largestArea.cells.length)
+    console.log('largest area:', largestArea.cells.length)
+
+    const closestCells = cells.filter(cell => cell.distanceSum < 10000)
+    console.log('closest cells area:', closestCells.length)
+
+
 }
